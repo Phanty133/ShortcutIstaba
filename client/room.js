@@ -1,7 +1,6 @@
 let ws;
 let username = "";
 let ignoreSeekEvent = false;
-let isHost = false;
 let syncInterval;
 let roomID;
 
@@ -39,10 +38,8 @@ function initSocket(){
 
 			if(data.cmd === "initOK"){
 				roomID = data.room;
-				isHost = data.host;
 
 				showID();
-
 				res();
 			}
 			else{
@@ -59,7 +56,6 @@ function connectRoom(){
 function syncVideo(){
 	ws.send(JSON.stringify({cmd: "sync"}));
 }
-
 
 function msgHandler(e){
 	const data = JSON.parse(e.data);
