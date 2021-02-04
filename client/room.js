@@ -18,12 +18,11 @@ async function init(){
 	initVideoEvents();
 	initChat();
 
-	const chat = document.getElementById("chat");
-	chat.style.maxHeight = (chat.clientHeight - 60).toString() + "px";
+	document.getElementById("topOverlayTop").style.display = "none";
 }
 
 function showID(){
-	document.getElementById("roomid").innerHTML = `Istabas kods: <b>${roomID}</b>`;
+	document.getElementById("inpTopId").value = `${roomID}`;
 }
 
 function initSocket(){
@@ -158,3 +157,7 @@ function addChatMessage(author, msg, color = "#000000"){
 
 	container.scrollTop = container.scrollHeight;
 }
+
+document.getElementById("clickFriends").addEventListener("click", () => {
+	document.getElementById("topOverlayTop").style.display = document.getElementById("topOverlayTop").style.display == "none" ? "grid" : "none";
+})
