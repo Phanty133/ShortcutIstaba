@@ -11,6 +11,10 @@
 *{
 	font-family: proximanova;
 }
+body{
+	padding: 0;
+	margin: 0;
+}
 
 #selectContainer{
 	display: grid;
@@ -77,7 +81,6 @@
 
 .urlButton{
 	background-color: #EEE;
-	border: 1px solid grey;
 	border-radius: 3px;
 	cursor: pointer;
 	transition: background-color 0.5s;
@@ -111,44 +114,178 @@
 	display: grid;
 	grid-template-columns: auto 1fr;
 	position: relative;
-	left: -6px;
-	top: -6px;
+	padding: 0;
 }
 
 #videoPlayer{
-	height: 99.5vh;
-	max-width: 85vw;
+	height: 100vh;
+	max-width: 80vw;
 	width: auto;
+	background-color: black;
+}
+
+#videoPlayer:focus{
+	outline: none;
 }
 
 #chatContainer{
 	width: 100%;
-	height: calc(100% - 2vh);
+	height: 100vh;
 	display: grid;
-	grid-template-rows: auto 1fr auto;
-	padding-top: 1vh;
-	padding-bottom: 1vh;
-	margin-left: 6px;
+	grid-template-rows: 1.5fr 15fr 2.2fr;
+	background-color: #161837;
 	row-gap: 3px;
-}
-
-#inputChat{
-	margin-bottom: 3px;
+	color: #B0B2D9;
 }
 
 #chat{
-	height: 100%;
-	/* max-height: 90vh; */
-	background-color: #CCC;
+	background-color: #0C0D1B;
 	list-style-type: none;
-	padding-top: 1em;
-	padding-left: 1em;
-	overflow-y: auto;
+	padding-top: 1vh;
+	padding-left: 1vw;
+	overflow-y: scroll;
+	color: #B0B2D9;
+	padding-bottom: 1vh;
+}
+
+#chat li {
+	margin-top: 0.5vh;
+	font-size: 1.3vh;
 }
 
 .chatAuthor{
 	font-weight: bold;
 }
+
+::-webkit-scrollbar {
+	width: 1em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #161837;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #1D1F47;
+	border-radius: 2em;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #1D1F47;
+	border-radius: 2em;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+	color:  #B0B2D9;
+	opacity: 1; /* Firefox */
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color:  #B0B2D9;
+  }
+  
+  ::-ms-input-placeholder { /* Microsoft Edge */
+	color:  #B0B2D9;
+  }
+
+#inputContainer {
+	display: grid;
+	grid-template-columns: 5fr 1.5fr;
+}
+
+#inputChat{
+	background-color: #1D1F47;
+	color: #B0B2D9;
+	position: relative;
+	margin-top: 1.4vh;
+	margin-left: 0.7vw;
+	resize: none;
+	border: none;
+	border-radius: 0.7em;
+	height: 60%;
+	padding: 1vh;
+	font-size: 1.3vh;
+}
+
+textarea:focus, button:focus {
+	outline: none;
+}
+
+button:hover {
+	cursor: pointer;
+}
+
+#chatContainer button {
+	border: 0;
+	background-color: #1D1F47;
+	color: #B0B2D9;
+	position: relative;
+	margin-top: 1.6vh;
+	margin-left: 0.7vw;
+	margin-right: 0.7vw;
+	border-radius: 0.7em;
+	height: 40%;
+	font-size: 1.3vh;
+}
+
+#roomid{
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+	max-height: 12vh;
+}
+
+#roomNameTop{
+	font-size: 3vh;
+	padding-top: 1vh;
+	padding-left: 1vw;
+	color: #EB1745;
+}
+
+#roomNameTop img {
+	max-height: 3vh;
+	cursor: pointer;
+}
+
+#topOverlayTop{
+	display: none;
+	grid-template-rows: 1fr 2fr;
+	position: absolute;
+	right: 3vw;
+	top: 5vh;
+	width: 10vw;
+	height: 7vh;
+	background-color:#161837;
+	color: #B0B2D9;
+	border-radius: 0.7vh;
+	padding: 0.5vw;
+}
+
+#textTopSmall{
+	font-size: 1.5vh;
+}
+
+#topOverlayTop input{
+	width: auto;
+	border: none;
+	background-color: #1D1F47;
+	border-radius: 0.7vh;
+	color: #B0B2D9;
+	font-size: 1.6vh;
+	padding-left: 0.6vw;
+}
+#topOverlayTop input:focus{
+	outline: none;
+}
+
+#roomFilmTop {
+	font-size: 2vh;
+	padding-left: 1vw;
+	color: #CD6B83;
+}
+
 
 #usernameInput{
 	font-size: 2vw;
