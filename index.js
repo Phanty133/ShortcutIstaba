@@ -23,8 +23,13 @@ function genHexString(len){
 }
 
 function nonRoomMiddleware(req, res, next){
-	if(req.session.token) delete req.session.token;
-	next();
+	if(req.session.token) {
+		req.session.destroy();
+		res.redirect("/");
+	}
+	else{
+		next();
+	}
 }
 
 app.use(session({
@@ -48,7 +53,8 @@ class Room {
 		this.id = id;
 		this.filmId = film;
 
-		this.path = path.join(__dirname, "mp4", `${this.filmId}.mp4`);
+		this.dir = path.join(__dirname, "client", "hls", this.filmId.toString());
+		this.path = path.join(this.dir, `${this.filmId}.m3u8`);
 	}
 
 	addMember(member){
@@ -85,6 +91,40 @@ class Room {
 			user.message(sender.name, msg, sender.color);
 		}
 	}
+
+	relayICECandidate(origin, data){
+		const target = this.members.find(user => user.token === data.peer);
+
+		if(target){
+			target.iceCandidate(origin, data);
+		}
+	}
+
+	relaySessionDesc(origin, data){
+		const target = this.members.find(user => user.token === data.peer);
+
+		if(target){
+			target.sessionDesc(origin, data);
+		}
+	}
+
+	addVoicePeer(user){
+		for(const member of this.members){
+			if(member === user) continue;
+
+			member.addPeer(user, false);
+			user.addPeer(member, true);
+		}
+	}
+
+	removeVoicePeer(user){
+		for(const member of this.members){
+			if(member === user) continue;
+
+			member.removePeer(user);
+			user.removePeer(member);
+		}
+	}
 }
 
 class User {
@@ -92,6 +132,7 @@ class User {
 	ws = null;
 	room = null;
 	name = null;
+	voice = false;
 
 	constructor(token, room = null){
 		this.token = token;
@@ -105,8 +146,8 @@ class User {
 		this.ws = ws;
 	}
 
-	setTime(time){
-		this.ws.send(JSON.stringify({cmd: "time", time}));
+	setTime(time, play = undefined){
+		this.ws.send(JSON.stringify({cmd: "time", time, play}));
 	}
 
 	pause(state){
@@ -119,6 +160,22 @@ class User {
 
 	ok(){
 		this.ws.send(JSON.stringify({cmd: "initOK", color: this.color, room: this.room.id}));
+	}
+
+	addPeer(target, createOffer){
+		this.ws.send(JSON.stringify({ cmd: "addPeer", peer: target.token, createOffer}));
+	}
+
+	iceCandidate(origin, data){
+		this.ws.send(JSON.stringify({ cmd: "iceCandidate", peer: origin.token, iceCandidate: data.iceCandidate }));
+	}
+
+	sessionDesc(origin, data){
+		this.ws.send(JSON.stringify({ cmd: "sessionDesc", peer: origin.token, sessionDesc: data.sessionDesc }));
+	}
+
+	removePeer(target){
+		this.ws.send(JSON.stringify({cmd: "removePeer", peer: target.token}));
 	}
 }
 
@@ -189,6 +246,16 @@ app.get("/room", tokenCheckMiddleware, (req, res) => {
 	res.sendFile(path.join(__dirname, "client", "room.html"));
 });
 
+app.get(/\d+.ts/, tokenCheckMiddleware, (req, res) => {
+	if(!users[req.session.token]) {
+		res.status(400).send("Requires an account");
+		return;
+	}
+
+	const room = users[req.session.token].room;
+	res.sendFile(`${room.dir}/${req.path}`);
+});
+
 app.get("/stream", tokenCheckMiddleware, (req, res) => {
 	if(!users[req.session.token]) {
 		res.status(400).send("Requires an account");
@@ -196,14 +263,7 @@ app.get("/stream", tokenCheckMiddleware, (req, res) => {
 	}
 
 	const room = users[req.session.token].room;
-	const path = room.path;
-	room.stream = send(req, path);
-	
-	room.stream
-	.on("error", (err) => {
-		console.log(err);
-	})
-	.pipe(res);
+	res.sendFile(room.path);
 });
 
 let pendingUserSync = [];
@@ -214,7 +274,6 @@ app.ws("/socket", (ws, req) => {
 
 	ws.on("message", (msg) => {
 		const data = JSON.parse(msg);
-		console.log(data);
 
 		switch(data.cmd){
 			case "name":
@@ -242,7 +301,7 @@ app.ws("/socket", (ws, req) => {
 				user.room.pause(user, data.state);
 				break;
 			case "sync":
-				user.setTime(user.room.time);
+				user.setTime(user.room.time, true);
 				break;
 			case "syncRoomTime":
 				user.room.time = data.time;
@@ -254,12 +313,26 @@ app.ws("/socket", (ws, req) => {
 				pendingUserSync = [];
 
 				break;
+			// VoIP
+			case "relayICECandidate":
+				user.room.relayICECandidate(user, data);
+				break;
+			case "relaySessionDesc":
+				user.room.relaySessionDesc(user, data);
+				break;
+			case "joinVoice":
+				if(user.voice) return;
+
+				user.room.addVoicePeer(user);
+
+				user.voice = true;
+				break;
 		}
 	});
 
 	ws.on("close", () => {
 		const user = users[req.session.token];
-		const index = user.room.removeMember(user.token);
+		user.room.removeMember(user.token);
 		const activeRoom = user.room;
 
 		if(activeRoom.members.length === 0){
@@ -268,7 +341,6 @@ app.ws("/socket", (ws, req) => {
 		}
 
 		delete users[req.session.token];
-		console.log(users);
 	});
 });
 

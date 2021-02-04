@@ -7,20 +7,20 @@
 
 		<link href="style.css" rel="stylesheet"/>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+		<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 	</head>
 	<body onload="init();" style="overflow: hidden;">
 		<div id="roomContainer">
-			<video id="videoPlayer" controls autoplay>
-				<source src="/stream" type="video/mp4" />
-			</video>
+			<video id="videoPlayer" controls></video>
 	
 			<div id="chatContainer">
 				<div id="roomid">
 					<div id = "roomNameTop">ANONĪMA ISTABA <img id = "clickFriends" src="img/people.png"></div>
-					<div id = "roomFilmTop">SKATĀS "BMK"</div>
+					<div id = "roomFilmTop"><!-- SKATĀS "BMK" --></div>
 					<div id = "topOverlayTop">
 						<div id = "textTopSmall">Kopē ID:</div>
-						<input type = "text" id = "inpTopId"></input>
+						<input type = "text" id = "inpTopId" disabled></input>
 					</div>
 				</div>
 				<div id="chat"></div>
