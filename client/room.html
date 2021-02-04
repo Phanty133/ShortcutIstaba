@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Istaba | Shortcut "Istaba" prototips</title>
+
+		<link href="style.css" rel="stylesheet"/>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+	</head>
+	<body onload="init();" style="overflow: hidden;">
+		<div id="roomContainer">
+			<video id="videoPlayer" width="650" controls muted="muted" autoplay>
+				<source src="/stream" type="video/mp4" />
+			</video>
+	
+			<div id="chatContainer">
+				<span id="roomid"></span>
+				<ul id="chat"></ul>
+				<textarea id="inputChat" placeholder="Come on. Write something. I dare you."></textarea>
+				<button id="submitChat">Send</button>
+			</div>
+		</div>
+
+		<script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script>
+		<script src="room.js"></script>
+	</body>
+</html>

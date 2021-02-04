@@ -1,0 +1,22 @@
+{
+  "name": "ShortcutIstaba",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express-ws": "^4.0.0",
+    "fs-extra": "^9.1.0",
+    "nocache": "^2.1.0",
+    "randomcolor": "^0.6.2",
+    "ws": "^7.4.3"
+  }
+}
