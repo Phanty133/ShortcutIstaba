@@ -138,6 +138,9 @@ function msgHandler(e){
 			delete peerMedia[peerToken];
 
 			break;
+		case "notifyNewUser":
+			addChatMessage(null, `${data.name} ir klāt!`, data.color);
+			break;
 	}
 }
 
@@ -198,15 +201,18 @@ function addChatMessage(author, msg, color = "#000000"){
 	const li = document.createElement("li");
 	container.appendChild(li);
 
-	const authorEl = document.createElement("span");
-	authorEl.textContent = `${author}`;
-	authorEl.className = "chatAuthor";
-	authorEl.style.color = color;
-	li.appendChild(authorEl);
+	if(author !== null){
+		const authorEl = document.createElement("span");
+		authorEl.textContent = `${author}`;
+		authorEl.className = "chatAuthor";
+		authorEl.style.color = color;
+		li.appendChild(authorEl);
+	}
 
 	const msgEl = document.createElement("span");
 	msgEl.textContent = `: ${msg}`;
 	msgEl.className = "chatMsg";
+	if(author === null) msgEl.style.color = color;
 	li.appendChild(msgEl);
 
 	container.scrollTop = container.scrollHeight;

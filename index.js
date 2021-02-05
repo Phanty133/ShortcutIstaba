@@ -125,6 +125,14 @@ class Room {
 			user.removePeer(member);
 		}
 	}
+
+	notifyJoin(newUser){
+		for(const member of this.members){
+			if(member === newUser) continue;
+
+			user.notifyNewUser(newUser);
+		}	
+	}
 }
 
 class User {
@@ -176,6 +184,10 @@ class User {
 
 	removePeer(target){
 		this.ws.send(JSON.stringify({cmd: "removePeer", peer: target.token}));
+	}
+
+	notifyNewUser(user){
+		this.ws.send(JSON.stringify({cmd: "notifyNewUser", name: user.name, color: user.color}));
 	}
 }
 
