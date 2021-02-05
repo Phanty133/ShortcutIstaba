@@ -317,7 +317,7 @@ app.ws("/socket", (ws, req) => {
 					pendingUserSync.push(user);
 				}
 
-				user.room.notifyNewUser(user);
+				user.room.notifyJoin(user);
 
 				break;
 			case "chat":
