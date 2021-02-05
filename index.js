@@ -316,6 +316,9 @@ app.ws("/socket", (ws, req) => {
 					user.room.members[0].ws.send(JSON.stringify({cmd: "getRoomTime"}));
 					pendingUserSync.push(user);
 				}
+
+				user.room.notifyNewUser(user);
+
 				break;
 			case "chat":
 				user.room.message(user, data.msg);
