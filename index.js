@@ -4,13 +4,18 @@ const app = express();
 const path = require("path");
 const session = require("express-session");
 const fs = require("fs");
-const expressWs = require("express-ws")(app);
 const randomColor = require("randomcolor");
 const send = require("send");
 const nocache = require("nocache");
+const https = require("https");
 
 const rooms = [];
 const users = {};
+
+// SSL
+
+const privateKey = fs.readFileSync("ssl/key.pem");
+const cert = fs.readFileSync("ssl/cert.pem");
 
 function genHexString(len){
 	return new Promise((res, rej) => {
@@ -268,6 +273,15 @@ app.get("/stream", tokenCheckMiddleware, (req, res) => {
 
 let pendingUserSync = [];
 
+const httpsServer = https.createServer({
+	key: privateKey,
+	cert: cert,
+	passphrase: ""
+}, app);
+httpsServer.listen(8080);
+
+const expressWs = require("express-ws")(app, httpsServer);
+
 app.ws("/socket", (ws, req) => {
 	const user = users[req.session.token];
 	user.connectSocket(ws);
@@ -331,6 +345,8 @@ app.ws("/socket", (ws, req) => {
 	});
 
 	ws.on("close", () => {
+		console.log("Closing socket");
+
 		const user = users[req.session.token];
 		user.room.removeMember(user.token);
 		const activeRoom = user.room;
@@ -342,8 +358,4 @@ app.ws("/socket", (ws, req) => {
 
 		delete users[req.session.token];
 	});
-});
-
-app.listen(8080, function () {
-	console.log("Listening on port 8080!");
 });
