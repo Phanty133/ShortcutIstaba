@@ -135,7 +135,7 @@ class Room {
 		for(const member of this.members){
 			if(member === newUser) continue;
 
-			user.notifyNewUser(newUser);
+			member.notifyNewUser(newUser);
 		}	
 	}
 }

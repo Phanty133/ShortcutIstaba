@@ -9,7 +9,7 @@ const ICE_SERVERS = [{url: "stun:stun.l.google.com:19302"}];
 let audioStream;
 
 const syncTime = 1000;
-const path = "wss://45.9.188.93:8080/socket";
+const path = `wss://${window.location.host}/socket`;
 
 async function init(){
 	username = Cookies.get("username");
@@ -210,9 +210,16 @@ function addChatMessage(author, msg, color = "#000000"){
 	}
 
 	const msgEl = document.createElement("span");
-	msgEl.textContent = `: ${msg}`;
 	msgEl.className = "chatMsg";
-	if(author === null) msgEl.style.color = color;
+
+	if(author === null) {
+		msgEl.style.color = color;
+		msgEl.textContent = msg;
+	}
+	else{
+		msgEl.textContent = `: ${msg}`;
+	}
+
 	li.appendChild(msgEl);
 
 	container.scrollTop = container.scrollHeight;
