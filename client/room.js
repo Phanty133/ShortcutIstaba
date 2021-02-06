@@ -5,7 +5,7 @@ let syncInterval;
 let roomID;
 const peers = {};
 const peerMedia = {};
-const ICE_SERVERS = [{url: "stun:stun.l.google.com:19302"}];
+const ICE_SERVERS = [{urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"]}, {"urls": "turn:45.9.188.93:5349", "username": "guest", "credential": "somepassword"}];
 let audioStream;
 
 const syncTime = 1000;
