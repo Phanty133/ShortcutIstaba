@@ -27,6 +27,7 @@ body{
 
 	position: relative;
 	top: -20vh;
+	row-gap: 3vh;
 }
 
 #selectContainer > div{
@@ -146,6 +147,8 @@ body{
 	overflow-y: scroll;
 	color: #B0B2D9;
 	padding-bottom: 1vh;
+	overflow-y: hidden;
+	overflow-wrap: break-word;
 }
 
 #chat li {
@@ -205,7 +208,7 @@ background: #161837;
 	resize: none;
 	border: none;
 	border-radius: 0.7em;
-	height: 60%;
+	margin-bottom: 1.6vh;
 	padding: 1vh;
 	font-size: 1.3vh;
 }
@@ -223,12 +226,12 @@ button:hover {
 	background-color: #1D1F47;
 	color: #B0B2D9;
 	position: relative;
-	margin-top: 1.6vh;
+	/* margin-top: 1.6vh; */
 	margin-left: 0.7vw;
 	margin-right: 0.7vw;
 	border-radius: 0.7em;
-	height: 40%;
-	font-size: 1.3vh;
+	height: 100%;
+	font-size: 1.5vh;
 }
 
 #roomid{
@@ -297,4 +300,33 @@ button:hover {
 
 .mainIndexInputContainer > span{
 	font-weight: bold;
+}
+
+.errorMessage{
+	color: red;
+	font-size: 2vw;
+}
+
+#chatControls{
+	display: grid;
+	grid-auto-flow: row;
+	grid-template-rows: 1fr 1fr;
+	row-gap: 10px;
+	height: calc(100% - 3.2vh);
+	padding-top: 1.6vh;
+	padding-bottom: 1.6vh;
+}
+
+#muteMic svg{
+	height: 100%;
+}
+
+#inputYoutubeContainer{
+	grid-column-start: 3;
+	display: grid;
+	grid-template-rows: auto auto;
+}
+
+#inputYoutubeContainer:hover{
+	background-color: initial !important;
 }
